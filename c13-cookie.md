@@ -24,13 +24,11 @@ Leslie, Oliver, Maya, Maya, Sparsh
 library(tidyverse)
 ```
 
-    ## Warning: package 'tidyverse' was built under R version 4.4.2
-
     ## ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
     ## ✔ dplyr     1.1.4     ✔ readr     2.1.5
     ## ✔ forcats   1.0.0     ✔ stringr   1.5.1
     ## ✔ ggplot2   3.5.1     ✔ tibble    3.2.1
-    ## ✔ lubridate 1.9.3     ✔ tidyr     1.3.1
+    ## ✔ lubridate 1.9.4     ✔ tidyr     1.3.1
     ## ✔ purrr     1.0.2     
     ## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
     ## ✖ dplyr::filter() masks stats::filter()
@@ -39,15 +37,8 @@ library(tidyverse)
 
 ``` r
 library(modelr)
-```
-
-    ## Warning: package 'modelr' was built under R version 4.4.2
-
-``` r
 library(broom)
 ```
-
-    ## Warning: package 'broom' was built under R version 4.4.2
 
     ## 
     ## Attaching package: 'broom'
@@ -656,80 +647,114 @@ mean.wei
 
 ``` r
 df_cookie %>%
-ggplot(aes(as.factor(Index), Circumference, color = as.factor(Cheap))) +
-  geom_point(cex = 1.5, pch = 1.0,position = position_jitter(w = 0.1, h = 0)) +
-  stat_summary(fun.data = 'mean_se', geom = 'errorbar', width = 0.4) +
-  stat_summary(fun.data = 'mean_se', geom = 'pointrange') +
+  ggplot(aes(x = as.factor(Index), y = Circumference, color = as.factor(Cheap))) +
+  geom_point(size = 2, shape = 1, position = position_jitter(width = 0.15, height = 0)) +
+  stat_summary(fun.data = mean_se, geom = "errorbar", width = 0.4) +
+  stat_summary(fun = mean, geom = "point", size = 3, shape = 18) +
   labs(
     x = "Cookie Index Number",
-    y = "Circunfermce (cm)",
-    color = "Cheap or Expensive"
+    y = "Circumference (cm)",
+    color = "Cheap or Expensive",
+    title = "Cookie Circumference by Index and Price Category"
   ) +
-  theme_minimal()
+  theme_minimal(base_size = 13) +
+  scale_color_manual(values = c("steelblue", "tomato")) +
+  theme(
+    axis.text.x = element_text(angle = 0, hjust = 0.5),
+    plot.title = element_text(face = "bold", hjust = 0.5),
+    legend.position = "top"
+  )
 ```
 
 ![](c13-cookie_files/figure-gfm/graph1-1.png)<!-- -->
 
 ``` r
 df_cookie %>%
-ggplot(aes(as.factor(Index), Height, color = as.factor(Chocolate_chips))) +
-  geom_point(cex = 1.5, pch = 1.0,position = position_jitter(w = 0.1, h = 0)) +
-  stat_summary(fun.data = 'mean_se', geom = 'errorbar', width = 0.4) +
-  stat_summary(fun.data = 'mean_se', geom = 'pointrange') +
+  ggplot(aes(x = as.factor(Index), y = Height, color = as.factor(Chocolate_chips))) +
+  geom_point(size = 2, shape = 1, position = position_jitter(width = 0.15, height = 0)) +
+  stat_summary(fun.data = mean_se, geom = "errorbar", width = 0.4) +
+  stat_summary(fun = mean, geom = "point", size = 3, shape = 18) +
   labs(
     x = "Cookie Index Number",
     y = "Height (mm)",
-    color = "Number of Chocolate chips"
+    color = "Number of Chocolate Chips",
+    title = "Cookie Height by Chocolate Chip Count"
   ) +
-  theme_minimal()
+  scale_color_viridis_d(option = "C", end = 0.85) +
+  theme_minimal(base_size = 13) +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    legend.position = "top",
+    plot.title = element_text(face = "bold", hjust = 0.5)
+  )
 ```
 
 ![](c13-cookie_files/figure-gfm/graph2-1.png)<!-- -->
 
 ``` r
-df_cookie %>% 
-ggplot(aes(as.factor(Index), Length, color = as.factor(Cheap))) +
-  geom_point(cex = 1.5, pch = 1.0,position = position_jitter(w = 0.1, h = 0)) +
-  stat_summary(fun.data = 'mean_se', geom = 'errorbar', width = 0.4) +
-  stat_summary(fun.data = 'mean_se', geom = 'pointrange') +
+df_cookie %>%
+  ggplot(aes(x = as.factor(Index), y = Length, color = as.factor(Cheap))) +
+  geom_point(size = 2, shape = 1, position = position_jitter(width = 0.15, height = 0)) +
+  stat_summary(fun.data = mean_se, geom = "errorbar", width = 0.4) +
+  stat_summary(fun = mean, geom = "point", size = 3, shape = 18) +
   labs(
     x = "Cookie Index Number",
     y = "Length (mm)",
-    color = "Cheap or Expensive"
+    color = "Price Category",
+    title = "Cookie Length by Price Category"
   ) +
-  theme_minimal()
+  theme_minimal(base_size = 13) +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    legend.position = "top",
+    plot.title = element_text(face = "bold", hjust = 0.5)
+  )
 ```
 
 ![](c13-cookie_files/figure-gfm/graph3-1.png)<!-- -->
 
 ``` r
-df_cookie %>% 
-ggplot(aes(as.factor(Index), Width, color = as.factor(Cheap))) +
-  geom_point(cex = 1.5, pch = 1.0,position = position_jitter(w = 0.1, h = 0)) +
-  stat_summary(fun.data = 'mean_se', geom = 'errorbar', width = 0.4) +
-  stat_summary(fun.data = 'mean_se', geom = 'pointrange') +
+df_cookie %>%
+  ggplot(aes(x = as.factor(Index), y = Width, color = as.factor(Cheap))) +
+  geom_point(size = 2, shape = 1, position = position_jitter(width = 0.15, height = 0)) +
+  stat_summary(fun.data = mean_se, geom = "errorbar", width = 0.4) +
+  stat_summary(fun = mean, geom = "point", size = 3, shape = 18) +
   labs(
     x = "Cookie Index Number",
     y = "Width (mm)",
-    color = "Cheap or Expensive"
+    color = "Price Category",
+    title = "Cookie Width by Price Category"
   ) +
-  theme_minimal()
+  theme_minimal(base_size = 13) +
+  scale_color_manual(values = c("#5F9EA0", "#C68642")) +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    legend.position = "top",
+    plot.title = element_text(face = "bold", hjust = 0.5)
+  )
 ```
 
 ![](c13-cookie_files/figure-gfm/graph4-1.png)<!-- -->
 
 ``` r
-df_cookie %>% 
-ggplot(aes(as.factor(Index), Weight, color = as.factor(Cheap))) +
-  geom_point(cex = 1.5, pch = 1.0,position = position_jitter(w = 0.1, h = 0)) +
-  stat_summary(fun.data = 'mean_se', geom = 'errorbar', width = 0.4) +
-  stat_summary(fun.data = 'mean_se', geom = 'pointrange') + 
+df_cookie %>%
+  ggplot(aes(x = as.factor(Index), y = Weight, color = as.factor(Cheap))) +
+  geom_point(size = 2, shape = 1, position = position_jitter(width = 0.15, height = 0)) +
+  stat_summary(fun.data = mean_se, geom = "errorbar", width = 0.4, color = "black") +
+  stat_summary(fun = mean, geom = "point", size = 3, shape = 18, color = "black") +
   labs(
     x = "Cookie Index Number",
-    y = "Weight after baking (grams)",
-    color = "Cheap or Expensive"
+    y = "Weight after Baking (grams)",
+    color = "Price Category",
+    title = "Cookie Weight by Price Category"
   ) +
-  theme_minimal()
+  scale_color_manual(values = c("#4C6D8C", "#D4A373")) +
+  theme_minimal(base_size = 13) +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    legend.position = "top",
+    plot.title = element_text(face = "bold", hjust = 0.5)
+  )
 ```
 
 ![](c13-cookie_files/figure-gfm/graph5-1.png)<!-- -->

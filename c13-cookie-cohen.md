@@ -18,13 +18,11 @@ Leslie, Oliver, Maya, Maya, Sparsh
 library(tidyverse)
 ```
 
-    ## Warning: package 'tidyverse' was built under R version 4.4.2
-
     ## ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
     ## ✔ dplyr     1.1.4     ✔ readr     2.1.5
     ## ✔ forcats   1.0.0     ✔ stringr   1.5.1
     ## ✔ ggplot2   3.5.1     ✔ tibble    3.2.1
-    ## ✔ lubridate 1.9.3     ✔ tidyr     1.3.1
+    ## ✔ lubridate 1.9.4     ✔ tidyr     1.3.1
     ## ✔ purrr     1.0.2     
     ## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
     ## ✖ dplyr::filter() masks stats::filter()
@@ -33,15 +31,8 @@ library(tidyverse)
 
 ``` r
 library(modelr)
-```
-
-    ## Warning: package 'modelr' was built under R version 4.4.2
-
-``` r
 library(broom)
 ```
-
-    ## Warning: package 'broom' was built under R version 4.4.2
 
     ## 
     ## Attaching package: 'broom'
@@ -54,11 +45,7 @@ library(broom)
 library(irr)
 ```
 
-    ## Warning: package 'irr' was built under R version 4.4.2
-
     ## Loading required package: lpSolve
-
-    ## Warning: package 'lpSolve' was built under R version 4.4.2
 
 ## Background Research
 
@@ -72,7 +59,6 @@ library(irr)
 
 ``` r
 filename_cookie_taste <- "./data/Taste_Data.csv"
-## NOTE: No need to edit
 df_cookie_taste <-
   read_csv(
     filename_cookie_taste,
@@ -305,34 +291,55 @@ head(df_cookie_taste)
 
 How to interception Cohen’s Kappa from Geeks for Geeks
 
-Kappa:
+**Kappa:**
 
-k=1: Perfect agreement beyond chance. k=0: Agreement equal to that
-expected by chance alone. k=−1: Perfect disagreement beyond chance.
+- k=1: Perfect agreement beyond chance.
 
-\####Interpretation of Cohen’s Kappa values Almost Perfect Agreement
-(0.81 - 1.00): - Indicates very high agreement between the raters. -
-Almost all observed agreement is due to actual agreement, with minimal
-disagreement.
+- k=0: Agreement equal to that expected by chance alone.
 
-Substantial Agreement (0.61 - 0.80): - Represents a strong level of
-agreement between raters. - A significant portion of the observed
-agreement is beyond what would be expected by chance.
+- k=−1: Perfect disagreement beyond chance.
 
-Moderate Agreement (0.41 - 0.60): - Suggests a moderate level of
-agreement. - There is agreement, but there is still a notable amount of
-variability that cannot be attributed to agreement alone.
+**Interpretation of Cohen’s Kappa values**
 
-Fair Agreement (0.21 - 0.40): - Indicates a fair level of agreement. -
-Some agreement is present, but it may not be strong, and a substantial
-amount of variability exists.
+- Almost Perfect Agreement (0.81 - 1.00):
 
-Slight Agreement (0.00 - 0.20): - Represents a slight level of
-agreement. - The observed agreement is minimal, and most of it could be
-due to chance.
+  - Indicates very high agreement between the raters.
 
-Poor Agreement (\< 0.00): - Signifies poor agreement, meaning the
-observed agreement is less than what would be expected by chance alone.
+  - Almost all observed agreement is due to actual agreement, with
+    minimal disagreement.
+
+- Substantial Agreement (0.61 - 0.80):
+
+  - Represents a strong level of agreement between raters.
+
+  - A significant portion of the observed agreement is beyond what would
+    be expected by chance.
+
+- Moderate Agreement (0.41 - 0.60):
+
+  - Suggests a moderate level of agreement.
+
+  - There is agreement, but there is still a notable amount of
+    variability that cannot be attributed to agreement alone.
+
+- Fair Agreement (0.21 - 0.40):
+
+  - Indicates a fair level of agreement.
+
+  - Some agreement is present, but it may not be strong, and a
+    substantial amount of variability exists.
+
+- Slight Agreement (0.00 - 0.20):
+
+  - Represents a slight level of agreement.
+
+  - The observed agreement is minimal, and most of it could be due to
+    chance.
+
+- Poor Agreement (\< 0.00):
+
+  - Signifies poor agreement, meaning the observed agreement is less
+    than what would be expected by chance alone.
 
 ``` r
 df_taste <- df_cookie_taste %>% 
@@ -514,40 +521,52 @@ kappam.light(df_yummy2)
 ## **Graph Time**
 
 ``` r
-df_graph <-
-df_cookie_taste %>% 
-select(Name,starts_with("Yum")) %>% 
-pivot_longer(
+df_graph <- df_cookie_taste %>% 
+  select(Name, starts_with("Yum")) %>% 
+  pivot_longer(
+    cols = starts_with("Yum"),
     names_to = "Yummy",
-    values_to = "n",
-    cols = c('Yumminess/Satisfaction-5CNF', 'Yumminess/Satisfaction-10CNF', 'Yumminess/Satisfaction-15CNF', 'Yumminess/Satisfaction-5CF', 'Yumminess/Satisfaction-10CF', 'Yumminess/Satisfaction-15CF', 'Yumminess/Satisfaction-5EF', 'Yumminess/Satisfaction-10EF', 'Yumminess/Satisfaction-15EF', 'Yumminess/Satisfaction-5ENF','Yumminess/Satisfaction-10ENF', 'Yumminess/Satisfaction-15ENF')
+    values_to = "n"
   ) %>% 
-mutate(
-    Yummy = fct_reorder(Yummy, n)
-  ) 
+  mutate(Yummy = fct_reorder(Yummy, n))
 
-df_graph %>% 
-ggplot(aes(Yummy, n, color = Name)) +
-  geom_point(size = 2 , position = position_jitter(w = 0.2, h = 0)) +
+ggplot(df_graph, aes(x = Yummy, y = n, color = Name)) +
+  geom_jitter(width = 0.15, height = 0, size = 2.5, alpha = 0.8) +
+  scale_color_viridis_d(option = "plasma", end = 0.85) +
   labs(
-    x = "Yumminess",
-    y = "Rating",
-    color = "Raters"
+    x = "Condition",
+    y = "Yumminess Rating",
+    color = "Rater",
+    title = "Yumminess Ratings Across Cookie Conditions"
   ) +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+  theme_minimal(base_size = 11) +
+  theme(
+    axis.text.x = element_text(angle = 90, hjust = 0.5),
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor.x = element_blank(),
+    plot.title = element_text(size = 14, face = "bold", hjust = 0.5)
+  )
 ```
 
 ![](c13-cookie-cohen_files/figure-gfm/graph1-1.png)<!-- -->
 
 ``` r
-df_graph %>% 
-ggplot(aes(Yummy, n)) +
-  geom_boxplot() +
+df_graph <- df_graph %>%
+  mutate(Yummy = fct_reorder(Yummy, n))
+
+ggplot(df_graph, aes(x = Yummy, y = n)) +
+  geom_boxplot(fill = "#69b3a2", color = "#444444", outlier.color = "gray30", outlier.size = 1.5) +
   labs(
-    x = "Yumminess",
-    y = "Rating"
+    x = "Cookie Condition",
+    y = "Yumminess Rating",
+    title = "Distribution of Yumminess Ratings by Condition"
   ) +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+  theme_minimal(base_size = 11) +
+  theme(
+    axis.text.x = element_text(angle = 90, hjust = 0),
+    plot.title = element_text(face = "bold", hjust = 0.5),
+    panel.grid.major.x = element_blank()
+  )
 ```
 
 ![](c13-cookie-cohen_files/figure-gfm/graph2-1.png)<!-- -->
