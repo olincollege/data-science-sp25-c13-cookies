@@ -261,3 +261,97 @@ ggplot(df_graph, aes(x = Yummy, y = n)) +
     panel.grid.major.x = element_blank()
   )
 ```
+
+```{r}
+df_expanded <- df_graph %>%
+  # Extract the number part, the fridge (yes/no), and cost (expensive/cheap)
+  mutate(
+    chip_count = as.integer(str_extract(Yummy, "\\d+")), 
+    fridge = ifelse(str_detect(Yummy, "NF"), "no", "yes"),  
+    cost = ifelse(str_detect(Yummy, "E"), "expensive", "cheap")  
+  )
+
+```
+
+```{r}
+df_expanded %>%
+  ggplot(aes(x = fridge, y = n)) + 
+  geom_boxplot(fill = "#69b3a2", color = "#444444", outlier.color = "gray30", outlier.size = 1.5) +
+  labs(
+    x = "Cookie Condition",
+    y = "Yumminess Rating",
+    title = "Distribution of Yumminess Ratings by Condition"
+  ) +
+  theme_minimal(base_size = 11) +
+  theme(
+    axis.text.x = element_text(angle = 90, hjust = 0),
+    plot.title = element_text(face = "bold", hjust = 0.5),
+    panel.grid.major.x = element_blank()
+  )
+
+df_expanded %>%
+  ggplot(aes(x = fridge, y = n, color = Name)) + 
+  geom_jitter(width = 0.15, height = 0, size = 2.5, alpha = 0.8)
+
+average_n_by_fridge <- df_expanded %>%
+  group_by(fridge) %>%
+  summarise(average_n = mean(n, na.rm = TRUE))
+print(average_n_by_fridge)
+
+
+```
+
+```{r}
+df_expanded %>%
+  ggplot(aes(x = factor(chip_count), y = n)) +
+  geom_boxplot(fill = "#69b3a2", color = "#444444") +
+  labs(
+    x = "Cookie Condition",
+    y = "Yumminess Rating",
+    title = "Distribution of Yumminess Ratings by Condition"
+  ) +
+  theme_minimal(base_size = 11) +
+  theme(
+    axis.text.x = element_text(angle = 90, hjust = 0),
+    plot.title = element_text(face = "bold", hjust = 0.5),
+    panel.grid.major.x = element_blank()
+  )
+
+
+df_expanded %>%
+  ggplot(aes(x = chip_count, y = n, color = Name)) + 
+  geom_jitter(width = 0.15, height = 0, size = 2.5, alpha = 0.8)
+
+average_n_by_fridge <- df_expanded %>%
+  group_by(chip_count) %>%
+  summarise(average_n = mean(n, na.rm = TRUE))
+print(average_n_by_fridge)
+```
+
+```{r}
+# View the transformed data
+df_expanded %>%
+  ggplot(aes(x = cost, y = n)) + 
+  geom_boxplot(fill = "#69b3a2", color = "#444444", outlier.color = "gray30", outlier.size = 1.5) +
+  labs(
+    x = "Cookie Condition",
+    y = "Yumminess Rating",
+    title = "Distribution of Yumminess Ratings by Condition"
+  ) +
+  theme_minimal(base_size = 11) +
+  theme(
+    axis.text.x = element_text(angle = 90, hjust = 0),
+    plot.title = element_text(face = "bold", hjust = 0.5),
+    panel.grid.major.x = element_blank()
+  )
+
+df_expanded %>%
+  ggplot(aes(x = cost, y = n, color = Name)) + 
+  geom_jitter(width = 0.15, height = 0, size = 2.5, alpha = 0.8)
+
+average_n_by_fridge <- df_expanded %>%
+  group_by(cost) %>%
+  summarise(average_n = mean(n, na.rm = TRUE))
+print(average_n_by_fridge)
+
+```
