@@ -93,7 +93,7 @@ after baking. We measured the following dependent variables to quantify
 size.
 
 | Variables | Explanation | Measurement Method |
-|------------------------|------------------------|------------------------|
+|----|----|----|
 | Length | Top-down diameter at the widest point | Calipers |
 | Width | Top-down diameter perpendicular to the widest point | Calipers |
 | Height | Distance from the baking tray to the highest point on the cookie | Calipers |
