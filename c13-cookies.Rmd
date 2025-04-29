@@ -93,7 +93,7 @@ after baking. We measured the following dependent variables to quantify
 size.
 
 | Variables | Explanation | Measurement Method |
-|----|----|----|
+|------------------------|------------------------|------------------------|
 | Length | Top-down diameter at the widest point | Calipers |
 | Width | Top-down diameter perpendicular to the widest point | Calipers |
 | Height | Distance from the baking tray to the highest point on the cookie | Calipers |
@@ -189,7 +189,6 @@ for each cookie.
 ## Initial EDA Checks
 
 ```{r}
-
 summary(df_cookie)
 head(df_cookie)
 ```
@@ -413,7 +412,6 @@ look at the mean with error bars, you can see the general trends.
 ### Graph 3
 
 ```{r}
-
 df_cookie %>%
   ggplot(aes(x = as.factor(Index), y = Length, color = as.factor(Cheap))) +
   geom_point(size = 2, shape = 1, position = position_jitter(width = 0.15, height = 0)) +
@@ -538,8 +536,6 @@ summary(df_cookie_taste)
 head(df_cookie_taste)
 ```
 
-[TODO - writeup for summary of the dataset]
-
 ## Cohen's Kappa Analysis
 
 How to interpret Cohen's Kappa (from Geeks for Geeks):
@@ -605,6 +601,9 @@ df_taste2 <- t(df_taste)
 kappam.light(df_taste2)
 ```
 
+Overall with a kappa of 0.0779 there is slight agreement from the
+tasters.
+
 ### Yumminess - Part 1
 
 ```{r Yumminess}
@@ -616,6 +615,8 @@ df_yummy <- t(df_yummy)
 
 kappam.light(df_yummy)
 ```
+
+There is a slight agreement on taste for all 6 tasters.
 
 ### Flavor
 
@@ -629,6 +630,8 @@ df_flavor <- t(df_flavor)
 kappam.light(df_flavor)
 ```
 
+There is a slight agreement on flavor.
+
 ### Texture
 
 ```{r Texture}
@@ -640,6 +643,8 @@ df_texture <- t(df_texture)
 
 kappam.light(df_texture)
 ```
+
+There is a slight agreement on texture.
 
 ### Chocolatey
 
@@ -653,6 +658,8 @@ df_chocolatey <- t(df_chocolatey)
 kappam.light(df_chocolatey)
 ```
 
+There is a slight agreement on chocolateness.
+
 ### Crispiness
 
 ```{r Crispiness}
@@ -665,6 +672,8 @@ df_crispiness <- t(df_crispiness)
 kappam.light(df_crispiness)
 ```
 
+There is a slight disagreement on crispiness.
+
 ### Chewiness
 
 ```{r Chewiness}
@@ -676,6 +685,8 @@ df_chewiness <- t(df_chewiness)
 
 kappam.light(df_chewiness)
 ```
+
+There is a very slight agreement on chewiness.
 
 ### Core Team
 
@@ -690,6 +701,9 @@ df_core2 <- t(df_core)
 kappam.light(df_core2)
 ```
 
+There is a slight agreement between the people that all tried the same
+cookie (cookies were cut into fourths).
+
 ### Yumminess - Part 2
 
 ```{r yummy2}
@@ -703,9 +717,28 @@ kappam.light(df_yummy2)
 
 ```
 
+There is a slight agreement between the four people all trying the same
+agreement for yumminess.
+
 ### Insights
 
-[TODO- brief writeup for Kappa analysis]
+Over all most of the categories, the tasters were in a slight agreement.
+This could be due to everyone having a different quarter of the cookie.
+The cookies were split into fourths, and were all slightly different
+because the chocolate was randomly dispersed. We had to use two cookies
+for every category, so some of the tasters are eating different cookies.
+To see if that made the difference we looked at the kappa for all 6
+tasters (0.0779) vs the kappa for the 4 people (0.105) that ate the same
+cookie. The four people that ate the same cookie are more aligned, but
+still fall into the same category of slight level of agreement. Which
+the observed agreement is minimal, and most of it could be due to
+chance.
+
+Additionally we didn't give strong instructions on how to judge all of
+the categories. This could also account for the differences. There are
+also difference on everyone's personal preferences as one of the tasters
+stated during the tasting that they preferred less chocolate, while
+others wanted more chocolate.
 
 ## Graphs
 
@@ -742,6 +775,15 @@ ggplot(df_graph, aes(x = Yummy, y = n, color = Name)) +
 
 **Observations:**
 
+The highest-rated cookie was the Expensive No Fridge 15, which was
+universally loved by all six tasters, receiving only 4s and 5s. In fact,
+only three cookies received a perfect score of 5: 10 Expensive Fridge,
+15 Expensive No Fridge, and 15 Expensive Fridge. In contrast, the lower
+scores were predominantly associated with cookies made using cheap
+ingredients and a low chocolate chip count, suggesting that both quality
+and quantity of ingredients play a significant role in perceived
+yumminess.
+
 ### Graph 2
 
 ```{r}
@@ -766,6 +808,9 @@ ggplot(df_graph, aes(x = Yummy, y = n)) +
 
 **Observations:**
 
+Most of the cookies have a fairly large range of 3, which out of a scale
+of 5, means that people have fairly different tastes in cookies.
+
 ### Graph 3
 
 ```{r}
@@ -784,7 +829,7 @@ df_expanded %>%
   labs(
     x = "Cookie Condition",
     y = "Yumminess Rating",
-    title = "Distribution of Yumminess Ratings by Condition"
+    title = "Distribution of Yumminess Ratings by Fridge and No Fridge"
   ) +
   theme_minimal(base_size = 11) +
   theme(
@@ -816,6 +861,24 @@ df_expanded %>%
     panel.grid.minor = element_blank(),
     legend.position = "top"
   )
+
+df_expanded %>%
+  ggplot(aes(x = fridge, y = n, color = chip_count)) + 
+  geom_jitter(width = 0.2, height = 0, size = 2.5, alpha = 0.8) +
+  labs(
+    x = "Refrigerated",
+    y = "Yumminess Rating",
+    color = "Name",
+    title = "Yumminess Ratings For Fridge or No Fridge"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    plot.title = element_text(face = "bold", hjust = 0.5),
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor = element_blank(),
+    legend.position = "top"
+  )
 ```
 
 ```{r}
@@ -827,6 +890,17 @@ print(average_n_by_fridge)
 
 **Observations:**
 
+There appears to be a slight preference for cookies resting in the
+fridge as they have an average overall satisfaction score of 3.3611,
+compared to no fridge of 2.944. However they share the same medium and
+have a similar spread as seen on the dot plot. There were no fridge
+cookies with a satisfaction score of 1, and there are less fridge
+cookies labelled 2 than no fridge.
+
+All of the 5’s in the no fridge category, have 15 chips, while the 5
+count cookies have the lower rankings. This implies chip count might be
+having a bigger impact on the cookies than the fridge.
+
 ### Graph 5
 
 ```{r}
@@ -836,7 +910,7 @@ df_expanded %>%
   labs(
     x = "Cookie Condition",
     y = "Yumminess Rating",
-    title = "Distribution of Yumminess Ratings by Condition"
+    title = "Distribution of Yumminess Ratings by Chip Count"
   ) +
   theme_minimal(base_size = 11) +
   theme(
@@ -846,13 +920,33 @@ df_expanded %>%
   )
 ```
 
-**Observations:**
-
 ### Graph 6
 
 ```{r}
 df_expanded %>%
   ggplot(aes(x = chip_count, y = n, color = Name)) + 
+  geom_jitter(width = 0.6, height = 0, size = 3, alpha = 0.7, stroke = 0.4) +
+  scale_color_brewer(palette = "Dark2") + 
+  scale_x_continuous(breaks = c(5, 10, 15)) +
+  labs(
+    x = "Number of Chocolate Chips",
+    y = "Yumminess Rating",
+    color = "Name",
+    title = "Relationship Between Chip Count and Yumminess"
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(
+    plot.title = element_text(face = "bold", hjust = 0.5, size = 14),
+    axis.text = element_text(color = "gray20"),
+    panel.grid.minor = element_blank(),
+    panel.grid.major.x = element_line(color = "gray90"),
+    panel.grid.major.y = element_line(color = "gray90"),
+    legend.position = "top",
+    legend.title = element_text(face = "bold")
+  )
+
+df_expanded %>%
+  ggplot(aes(x = chip_count, y = n, color = cost)) + 
   geom_jitter(width = 0.6, height = 0, size = 3, alpha = 0.7, stroke = 0.4) +
   scale_color_brewer(palette = "Dark2") + 
   scale_x_continuous(breaks = c(5, 10, 15)) +
@@ -883,6 +977,18 @@ print(average_n_by_fridge)
 
 **Observations:**
 
+It appears that increasing the amount of chocolate chips increases both
+the satisfaction and yumminess ratings. Cookies with 5 chips have a mean
+rating of 2.66, those with 10 chips have a mean of 3.25, and cookies
+with 15 chips have a mean of 3.54. The median also increases in that
+order. A cookie with 5 chips has a satisfaction rating between 1 and 4,
+while cookies with 10 and 15 chips have satisfaction ratings between 2
+and 5. Cookies with 10 and 15 chips are more similar to each other than
+to those with 5 chips, which suggests that 5 chips may not be enough,
+while 10 and 15 chips are a satisfactory amount.
+
+All of the 5s are expensive cookies.
+
 ### Graph 7
 
 ```{r}
@@ -892,7 +998,7 @@ df_expanded %>%
   labs(
     x = "Cookie Condition",
     y = "Yumminess Rating",
-    title = "Distribution of Yumminess Ratings by Condition"
+    title = "Distribution of Yumminess Ratings by Cost"
   ) +
   theme_minimal(base_size = 11) +
   theme(
@@ -902,8 +1008,6 @@ df_expanded %>%
   )
 ```
 
-**Observations:**
-
 ### Graph 8
 
 ```{r}
@@ -912,6 +1016,26 @@ df_expanded %>%
   ggplot(aes(x = cost, y = n, color = Name)) + 
   geom_jitter(width = 0.2, height = 0, size = 3, alpha = 0.7, stroke = 0.4) +
   scale_color_brewer(palette = "Paired") +
+  labs(
+    x = "Cost of Materials",
+    y = "Yumminess Rating",
+    color = "Name",
+    title = "Relationship Between Cost of Materials and Yumminess"
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(
+    plot.title = element_text(face = "bold", hjust = 0.5, size = 14),
+    axis.text = element_text(color = "gray20"),
+    panel.grid.major.x = element_line(color = "gray90"),
+    panel.grid.major.y = element_line(color = "gray90"),
+    panel.grid.minor = element_blank(),
+    legend.position = "top",
+    legend.title = element_text(face = "bold")
+  )
+
+df_expanded %>%
+  ggplot(aes(x = cost, y = n, color = chip_count)) + 
+  geom_jitter(width = 0.2, height = 0, size = 3, alpha = 0.7, stroke = 0.4) +
   labs(
     x = "Cost of Materials",
     y = "Yumminess Rating",
@@ -939,11 +1063,59 @@ print(average_n_by_fridge)
 
 **Observations:**
 
+It appears that the more expensive cookies were better liked as they
+have a mean of 3.611 and cheaper cookies have a mean of 2.6944.
+
+### Graph 9
+
+```{r}
+df_expanded %>%
+  ggplot(aes(x = chip_count, y = cost, color = n)) + 
+  geom_jitter(width = 0.45, height = .2, size = 2.5, alpha = 0.8) +
+  labs(
+    x = "Chip Count",
+    y = "Cost",
+    color = "Yumminess Rating",
+    title = "Relationship Between Chip Count and Cost"
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(
+    plot.title = element_text(face = "bold", hjust = 0.5, size = 14),
+    axis.text = element_text(color = "gray20"),
+    panel.grid.major.x = element_line(color = "gray90"),
+    panel.grid.major.y = element_line(color = "gray90"),
+    panel.grid.minor = element_blank(),
+    legend.position = "top",
+    legend.title = element_text(face = "bold")
+  )
+```
+
+This graph displays the over all findings quite well, as both high chip
+count and expensive cookies get higher ratings. Having both is better,
+but having one of those things can improve the cookies rating.
+
 # Part 4: Final Conclusions and Future Exploration Tracks
 
 ## Quantify Sources of Uncertainty
 
-[TODO]
+The experiment had its own sources of uncertainty that we observed prior
+to analysis. 
+
+-   Temperature of the Oven (constant or not)
+
+-   Fridge and Room Temperature (constant or not)
+
+-   Tray location in the oven (we attempted to put the tray in the same
+    location each time)
+
+There are other underlying sources of uncertainty we found after
+analysis.
+
+-   Definitions of Taste Metrics (People could understand the ranking
+    metric differently)
+
+-   Is height to the highest point on the cookie with chocolate chips or
+    not? Is the height to the average height across the cookie?
 
 ## Final Conclusions
 
