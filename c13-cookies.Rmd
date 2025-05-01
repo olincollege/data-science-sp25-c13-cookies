@@ -513,7 +513,8 @@ batter.
 
 # Part 3: Cookie Taste Analysis
 
-[TODO - Section Description]
+In this section, we analyze the taste of cookies based on tasting data
+obtained from people in our study.
 
 ## Import Data
 
